@@ -1,0 +1,82 @@
+[project]
+name = "whatsfuse"
+version = "0.1.0"
+description = "Unified Python SDK for multiple WhatsApp API providers - inspired by LiteLLM"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    { name = "WhatsFuse Contributors" }
+]
+license = { text = "MIT" }
+keywords = ["whatsapp", "api", "sdk", "waha", "green-api", "unified", "wrapper"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Communications :: Chat",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "httpx>=0.25.0",
+    "pydantic>=2.0.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "pytest-asyncio>=0.21.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.5.0",
+    "pre-commit>=3.0.0",
+]
+async = [
+    "httpx[http2]>=0.25.0",
+]
+images = [
+    "pillow>=10.0.0",
+]
+all = [
+    "whatsfuse[dev,async,images]",
+]
+
+[project.urls]
+Homepage = "https://github.com/yourusername/whatsfuse"
+Documentation = "https://whatsfuse.readthedocs.io"
+Repository = "https://github.com/yourusername/whatsfuse"
+Issues = "https://github.com/yourusername/whatsfuse/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_functions = "test_*"
+addopts = "--cov=whatsfuse --cov-report=term-missing --cov-report=html"
+
+[tool.black]
+line-length = 100
+target-version = ["py310"]
+include = '\.pyi?$'
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+select = ["E", "F", "I", "N", "W", "UP"]
+ignore = []
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
