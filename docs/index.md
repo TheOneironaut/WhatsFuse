@@ -164,15 +164,26 @@ Each provider is completely isolated, making it easy to:
 - Fix provider-specific issues
 - Customize behavior per provider
 
-## Provider Development
+## Developer Resources
 
-Want to add a new provider? Check out these resources:
+### For Contributors
+- **[Contributing Guide](CONTRIBUTING.md)** - How to contribute to WhatsFuse
+- **[Project Overview](development/project-overview.md)** - Complete architecture overview
+- **[Start Here](development/start-here.md)** - Development environment setup
+- **[Automation System](development/automation-system.md)** - How we manage the API
+
+### For Understanding the Project
+- **[Unified Interface Philosophy](development/unified-interface-philosophy.md)** - Why and how we unify APIs
+- **[Getting Started (Dev)](development/getting-started.md)** - Development workflow guide
+
+### Provider Development
 - **[Parameter Mapping Guide](PARAMETER_MAPPING.md)** - How unified parameters map to provider APIs
-- **[Contributing Guide](../CONTRIBUTING.md)** - Step-by-step guide to adding providers
+- **[Architecture Overview](architecture.md)** - Visual architecture diagrams
+- **[Design Document](DESIGN.md)** - Detailed design decisions
 
 ## Contributing
 
-We welcome contributions! See our [Contributing Guide](../CONTRIBUTING.md) for details on:
+We welcome contributions! See our [Contributing Guide](CONTRIBUTING.md) for details on:
 - Adding new providers
 - Reporting bugs
 - Suggesting features

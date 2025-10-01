@@ -78,9 +78,9 @@ python scripts/validate_api.py  # Should pass ג…
 
 ## נ“ Documentation
 
-- [scripts/README.md](scripts/README.md) - Detailed automation guide
-- [docs/FEATURE_MATRIX.md](docs/FEATURE_MATRIX.md) - Auto-generated API reference
-- [PARAMETER_MAPPING.md](docs/PARAMETER_MAPPING.md) - Provider translation guide
+- [scripts/README.md](../../scripts/README.md) - Detailed automation guide
+- [FEATURE_MATRIX.md](../FEATURE_MATRIX.md) - Auto-generated API reference
+- [PARAMETER_MAPPING.md](../PARAMETER_MAPPING.md) - Provider translation guide
 
 ---
 

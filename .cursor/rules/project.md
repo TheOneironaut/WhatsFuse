@@ -384,6 +384,129 @@ def send_text_message(
 6. Build and publish to PyPI
 7. Create GitHub release with notes
 
+## Adding New Functions or Parameters
+
+**CRITICAL**: WhatsFuse uses a hybrid automation system for managing API methods and parameters.
+
+### The Process
+
+```
+1. Edit api_spec.json (single source of truth)
+   ↓
+2. Update code manually (BaseClient, WhatsFuse, Providers)
+   ↓
+3. Run validation: python scripts/validate_api.py
+   ↓
+4. Generate docs: python scripts/generate_docs.py
+   ↓
+5. Commit all changes
+```
+
+### Step-by-Step Guide
+
+#### Adding a New Method
+
+1. **Update `api_spec.json`**:
+   ```json
+   {
+     "methods": {
+       "your_new_method": {
+         "category": "messaging",
+         "description": "Your method description",
+         "returns": "Message",
+         "status": "in_progress",
+         "parameters": [
+           {
+             "name": "param_name",
+             "type": "str",
+             "required": true,
+             "default": null,
+             "description": "Parameter description"
+           }
+         ],
+         "providers": {
+           "waha": {
+             "supported": true,
+             "mapping": {"waha_param": "param_name"},
+             "notes": "Implementation notes"
+           }
+         }
+       }
+     }
+   }
+   ```
+
+2. **Update `BaseClient`** (`whatsfuse/core/base_client.py`):
+   ```python
+   @abstractmethod
+   def your_new_method(self, param_name: str) -> Message:
+       """Your method description."""
+       pass
+   ```
+
+3. **Update `WhatsFuse`** (`whatsfuse/main.py`):
+   ```python
+   def your_new_method(self, param_name: str) -> Message:
+       """Your method description."""
+       return self._client.your_new_method(param_name)
+   ```
+
+4. **Update Each Provider** (`whatsfuse/providers/*/client.py`):
+   ```python
+   def your_new_method(self, param_name: str) -> Message:
+       """Implementation for this provider."""
+       # Translate parameters
+       # Make API call
+       # Return unified response
+   ```
+
+5. **Validate**:
+   ```bash
+   python scripts/validate_api.py  # Should pass ✅
+   ```
+
+6. **Generate Documentation**:
+   ```bash
+   python scripts/generate_docs.py  # Updates FEATURE_MATRIX.md
+   ```
+
+#### Adding a New Parameter to Existing Method
+
+1. **Update `api_spec.json`**:
+   - Add parameter to the method's `parameters` array
+   - Update provider mappings in `providers` section
+
+2. **Update `BaseClient`**: Add parameter to method signature
+
+3. **Update `WhatsFuse`**: Add parameter to method signature
+
+4. **Update All Providers**: Handle the new parameter
+
+5. **Run validation and generate docs** (same as above)
+
+### Validation System
+
+The `validate_api.py` script checks:
+- ✅ All methods in `api_spec.json` exist in `BaseClient`
+- ✅ All parameters match between spec and code
+- ✅ All providers implement required methods
+- ❌ Fails if any inconsistency is found
+
+### Documentation Generation
+
+The `generate_docs.py` script automatically creates:
+- `docs/FEATURE_MATRIX.md` - Complete feature and parameter documentation
+- Provider mappings and support status
+- Parameter tables with types and descriptions
+
+### Important Notes
+
+- **api_spec.json** is the single source of truth
+- **Never skip validation** before committing
+- **Always regenerate docs** after spec changes
+- **Commit both spec and generated docs** together
+- **Manual code implementation** gives you full flexibility
+
 ## AI Assistant Guidelines
 
 When working on this project:
@@ -397,6 +520,7 @@ When working on this project:
 8. **Before** adding new dependencies, consider if they're truly necessary
 9. **Before** making breaking changes, discuss with the team
 10. **Prefer** composition over inheritance where it makes sense
+11. **When adding methods/parameters**: Follow the automation system process above
 
 ## Current Provider Status
 

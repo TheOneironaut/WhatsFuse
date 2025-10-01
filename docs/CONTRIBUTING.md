@@ -42,9 +42,9 @@ git checkout -b fix/your-bug-fix
 
 ## Development Guidelines
 
-### Read .cursorrules First!
+### Read project.md First!
 
-Before contributing, **please read [.cursorrules](.cursorrules)** - it contains comprehensive development guidelines for the project.
+Before contributing, **please read [.cursor/rules/project.md](../.cursor/rules/project.md)** - it contains comprehensive development guidelines for the project.
 
 ### Key Principles
 
@@ -312,12 +312,14 @@ git push origin feature/your-feature-name
 
 ### PR Checklist
 
-- [ ] Code follows project style (.cursorrules)
+- [ ] Code follows project style (`.cursor/rules/project.md`)
 - [ ] All tests pass
 - [ ] New tests added for new features
 - [ ] Documentation updated
 - [ ] Type hints added
 - [ ] Docstrings added
+- [ ] Run `python scripts/validate_api.py` (if API changed)
+- [ ] Run `python scripts/generate_docs.py` (if API changed)
 - [ ] CHANGELOG.md updated (if applicable)
 
 ## Getting Help

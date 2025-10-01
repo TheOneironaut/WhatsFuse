@@ -248,7 +248,7 @@ If you need to add new unified parameters:
 
 - **LiteLLM**: Inspiration for unified interface pattern
 - **WAHA API**: Reference implementation for parameter naming
-- **[PARAMETER_MAPPING.md](docs/PARAMETER_MAPPING.md)**: Detailed mapping guide
+- **[PARAMETER_MAPPING.md](../PARAMETER_MAPPING.md)**: Detailed mapping guide
 
 ## Summary
 
@@ -263,4 +263,4 @@ If you need to add new unified parameters:
 
 ---
 
-**Questions?** See `docs/PARAMETER_MAPPING.md` for detailed mapping guide.
+**Questions?** See [PARAMETER_MAPPING.md](../PARAMETER_MAPPING.md) for detailed mapping guide.

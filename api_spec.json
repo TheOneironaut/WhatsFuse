@@ -1,58 +1,446 @@
 {
-  "version": "0.1.0",
-  "updated": "2025-09-30",
-  "description": "WhatsFuse Unified API Specification - Single source of truth",
+  "version": "0.2.0",
+  "updated": "2025-10-01",
+  "description": "WhatsFuse Unified API Specification - Complete mapping of WAHA and Green API methods",
   "methods": {
     "send_text_message": {
       "category": "messaging",
       "description": "Send a text message to a chat",
-      "status": "in_progress",
+      "status": "implemented",
       "returns": "Message",
+      "waha_endpoint": "POST /api/sendText",
+      "green_api_endpoint": "POST /sendMessage",
       "parameters": [
-        {
-          "name": "chat_id",
-          "type": "str",
-          "required": true,
-          "description": "The unique identifier for the chat",
-          "waha": {"support": "full", "name": "chatId", "notes": "Direct mapping"},
-          "green_api": {"support": "full", "name": "chatId", "notes": "Adds @c.us suffix"}
-        },
-        {
-          "name": "text",
-          "type": "str",
-          "required": true,
-          "description": "The message text to send",
-          "waha": {"support": "full", "name": "text"},
-          "green_api": {"support": "full", "name": "message", "notes": "Different name"}
-        },
-        {
-          "name": "reply_to",
-          "type": "Optional[str]",
-          "required": false,
-          "default": null,
-          "description": "Optional message ID to reply to",
-          "waha": {"support": "full", "name": "reply_to"},
-          "green_api": {"support": "full", "name": "quotedMessageId"}
-        },
-        {
-          "name": "mentions",
-          "type": "Optional[list[str]]",
-          "required": false,
-          "default": null,
-          "description": "Optional list of phone numbers to mention",
-          "waha": {"support": "full", "name": "mentions"},
-          "green_api": {"support": "partial", "name": "mentions", "notes": "Format limitations"}
-        },
-        {
-          "name": "link_preview",
-          "type": "bool",
-          "required": false,
-          "default": true,
-          "description": "Whether to show link preview",
-          "waha": {"support": "full", "name": "linkPreview"},
-          "green_api": {"support": "full", "name": "linkPreview"}
-        }
+        {"name": "chat_id", "type": "str", "required": true, "description": "The unique identifier for the chat", "waha": {"support": "full", "name": "chatId"}, "green_api": {"support": "full", "name": "chatId"}},
+        {"name": "text", "type": "str", "required": true, "description": "The message text to send", "waha": {"support": "full", "name": "text"}, "green_api": {"support": "full", "name": "message"}},
+        {"name": "reply_to", "type": "Optional[str]", "required": false, "default": null, "description": "Optional message ID to reply to", "waha": {"support": "full", "name": "reply_to"}, "green_api": {"support": "full", "name": "quotedMessageId"}},
+        {"name": "mentions", "type": "Optional[list[str]]", "required": false, "default": null, "description": "Optional list of phone numbers to mention", "waha": {"support": "full", "name": "mentions"}, "green_api": {"support": "partial", "name": "mentions"}},
+        {"name": "link_preview", "type": "bool", "required": false, "default": true, "description": "Whether to show link preview", "waha": {"support": "full", "name": "linkPreview"}, "green_api": {"support": "full", "name": "linkPreview"}}
+      ]
+    },
+    "send_image": {
+      "category": "messaging",
+      "description": "Send an image message to a chat",
+      "status": "planned",
+      "returns": "Message",
+      "waha_endpoint": "POST /api/sendImage",
+      "green_api_endpoint": "POST /sendFileByUrl or POST /sendFileByUpload",
+      "parameters": [
+        {"name": "chat_id", "type": "str", "required": true, "description": "The unique identifier for the chat", "waha": {"support": "full", "name": "chatId"}, "green_api": {"support": "full", "name": "chatId"}},
+        {"name": "file", "type": "FileData", "required": true, "description": "File data (url or base64)", "waha": {"support": "full", "name": "file"}, "green_api": {"support": "full", "name": "urlFile or file"}},
+        {"name": "caption", "type": "Optional[str]", "required": false, "default": null, "description": "Optional caption for the image", "waha": {"support": "full", "name": "caption"}, "green_api": {"support": "full", "name": "caption"}}
+      ]
+    },
+    "send_video": {
+      "category": "messaging",
+      "description": "Send a video message to a chat",
+      "status": "planned",
+      "returns": "Message",
+      "waha_endpoint": "POST /api/sendVideo",
+      "green_api_endpoint": "POST /sendFileByUrl",
+      "parameters": [
+        {"name": "chat_id", "type": "str", "required": true, "waha": {"support": "full", "name": "chatId"}, "green_api": {"support": "full", "name": "chatId"}},
+        {"name": "file", "type": "FileData", "required": true, "waha": {"support": "full", "name": "file"}, "green_api": {"support": "full", "name": "urlFile"}},
+        {"name": "caption", "type": "Optional[str]", "required": false, "default": null, "waha": {"support": "full", "name": "caption"}, "green_api": {"support": "full", "name": "caption"}},
+        {"name": "as_note", "type": "bool", "required": false, "default": false, "description": "Send as video note", "waha": {"support": "full", "name": "asNote"}, "green_api": {"support": "none"}}
+      ]
+    },
+    "send_file": {
+      "category": "messaging",
+      "description": "Send a file/document message to a chat",
+      "status": "planned",
+      "returns": "Message",
+      "waha_endpoint": "POST /api/sendFile",
+      "green_api_endpoint": "POST /sendFileByUrl or POST /sendFileByUpload",
+      "parameters": [
+        {"name": "chat_id", "type": "str", "required": true, "waha": {"support": "full", "name": "chatId"}, "green_api": {"support": "full", "name": "chatId"}},
+        {"name": "file", "type": "FileData", "required": true, "waha": {"support": "full", "name": "file"}, "green_api": {"support": "full", "name": "urlFile or file"}},
+        {"name": "caption", "type": "Optional[str]", "required": false, "default": null, "waha": {"support": "full", "name": "caption"}, "green_api": {"support": "full", "name": "caption"}}
+      ]
+    },
+    "send_voice": {
+      "category": "messaging",
+      "description": "Send a voice message to a chat",
+      "status": "planned",
+      "returns": "Message",
+      "waha_endpoint": "POST /api/sendVoice",
+      "green_api_endpoint": "POST /sendFileByUrl",
+      "parameters": [
+        {"name": "chat_id", "type": "str", "required": true, "waha": {"support": "full", "name": "chatId"}, "green_api": {"support": "full", "name": "chatId"}},
+        {"name": "file", "type": "FileData", "required": true, "waha": {"support": "full", "name": "file"}, "green_api": {"support": "full", "name": "urlFile"}}
+      ]
+    },
+    "send_location": {
+      "category": "messaging",
+      "description": "Send a location message to a chat",
+      "status": "planned",
+      "returns": "Message",
+      "waha_endpoint": "POST /api/sendLocation",
+      "green_api_endpoint": "POST /sendLocation",
+      "parameters": [
+        {"name": "chat_id", "type": "str", "required": true, "waha": {"support": "full", "name": "chatId"}, "green_api": {"support": "full", "name": "chatId"}},
+        {"name": "latitude", "type": "float", "required": true, "waha": {"support": "full", "name": "latitude"}, "green_api": {"support": "full", "name": "latitude"}},
+        {"name": "longitude", "type": "float", "required": true, "waha": {"support": "full", "name": "longitude"}, "green_api": {"support": "full", "name": "longitude"}},
+        {"name": "name", "type": "Optional[str]", "required": false, "default": null, "waha": {"support": "full", "name": "name"}, "green_api": {"support": "full", "name": "nameLocation"}},
+        {"name": "address", "type": "Optional[str]", "required": false, "default": null, "waha": {"support": "full", "name": "address"}, "green_api": {"support": "full", "name": "address"}}
+      ]
+    },
+    "send_contact": {
+      "category": "messaging",
+      "description": "Send a contact card (vCard) to a chat",
+      "status": "planned",
+      "returns": "Message",
+      "waha_endpoint": "POST /api/sendContactVcard",
+      "green_api_endpoint": "POST /sendContact",
+      "parameters": [
+        {"name": "chat_id", "type": "str", "required": true, "waha": {"support": "full", "name": "chatId"}, "green_api": {"support": "full", "name": "chatId"}},
+        {"name": "contact", "type": "ContactData", "required": true, "waha": {"support": "full", "name": "contact"}, "green_api": {"support": "full", "name": "contact"}}
+      ]
+    },
+    "send_poll": {
+      "category": "messaging",
+      "description": "Send a poll message to a chat",
+      "status": "planned",
+      "returns": "Message",
+      "waha_endpoint": "POST /api/sendPoll",
+      "green_api_endpoint": "POST /sendPoll",
+      "parameters": [
+        {"name": "chat_id", "type": "str", "required": true, "waha": {"support": "full", "name": "chatId"}, "green_api": {"support": "full", "name": "chatId"}},
+        {"name": "name", "type": "str", "required": true, "description": "Poll question", "waha": {"support": "full", "name": "poll.name"}, "green_api": {"support": "full", "name": "message"}},
+        {"name": "options", "type": "list[str]", "required": true, "waha": {"support": "full", "name": "poll.options"}, "green_api": {"support": "full", "name": "options"}},
+        {"name": "multiple_answers", "type": "bool", "required": false, "default": false, "waha": {"support": "full", "name": "poll.multipleAnswers"}, "green_api": {"support": "full", "name": "multipleAnswers"}}
+      ]
+    },
+    "send_buttons": {
+      "category": "messaging",
+      "description": "Send a message with interactive buttons",
+      "status": "planned",
+      "returns": "Message",
+      "waha_endpoint": "POST /api/sendButtons (WEBJS only)",
+      "green_api_endpoint": "POST /sendButtons",
+      "parameters": [
+        {"name": "chat_id", "type": "str", "required": true, "waha": {"support": "partial", "name": "chatId"}, "green_api": {"support": "full", "name": "chatId"}},
+        {"name": "text", "type": "str", "required": true, "waha": {"support": "partial", "name": "text"}, "green_api": {"support": "full", "name": "message"}},
+        {"name": "buttons", "type": "list[Button]", "required": true, "waha": {"support": "partial", "name": "buttons"}, "green_api": {"support": "full", "name": "buttons"}},
+        {"name": "footer", "type": "Optional[str]", "required": false, "default": null, "waha": {"support": "none"}, "green_api": {"support": "full", "name": "footer"}}
+      ]
+    },
+    "send_list_message": {
+      "category": "messaging",
+      "description": "Send a message with a list of selectable items",
+      "status": "planned",
+      "returns": "Message",
+      "waha_endpoint": "Not supported",
+      "green_api_endpoint": "POST /sendListMessage",
+      "parameters": [
+        {"name": "chat_id", "type": "str", "required": true, "waha": {"support": "none"}, "green_api": {"support": "full", "name": "chatId"}},
+        {"name": "title", "type": "str", "required": true, "waha": {"support": "none"}, "green_api": {"support": "full", "name": "title"}},
+        {"name": "description", "type": "str", "required": true, "waha": {"support": "none"}, "green_api": {"support": "full", "name": "description"}},
+        {"name": "button_text", "type": "str", "required": true, "waha": {"support": "none"}, "green_api": {"support": "full", "name": "buttonText"}},
+        {"name": "sections", "type": "list[Section]", "required": true, "waha": {"support": "none"}, "green_api": {"support": "full", "name": "sections"}}
+      ]
+    },
+    "send_event": {
+      "category": "messaging",
+      "description": "Send an event/calendar message to a chat",
+      "status": "planned",
+      "returns": "Message",
+      "waha_endpoint": "POST /api/{session}/events",
+      "green_api_endpoint": "Not supported",
+      "parameters": [
+        {"name": "chat_id", "type": "str", "required": true, "waha": {"support": "full", "name": "chatId"}, "green_api": {"support": "none"}},
+        {"name": "event", "type": "EventData", "required": true, "waha": {"support": "full", "name": "event"}, "green_api": {"support": "none"}}
+      ]
+    },
+    "forward_message": {
+      "category": "messaging",
+      "description": "Forward a message to another chat",
+      "status": "planned",
+      "returns": "Message",
+      "waha_endpoint": "POST /api/forwardMessage",
+      "green_api_endpoint": "POST /forwardMessages",
+      "parameters": [
+        {"name": "chat_id", "type": "str", "required": true, "waha": {"support": "full", "name": "chatId"}, "green_api": {"support": "full", "name": "chatId"}},
+        {"name": "message_id", "type": "str", "required": true, "waha": {"support": "full", "name": "messageId"}, "green_api": {"support": "full", "name": "idMessage"}}
+      ]
+    },
+    "edit_message": {
+      "category": "message_management",
+      "description": "Edit an existing message",
+      "status": "planned",
+      "returns": "Message",
+      "waha_endpoint": "PUT /api/{session}/chats/{chatId}/messages/{messageId}",
+      "green_api_endpoint": "POST /editMessage",
+      "parameters": [
+        {"name": "chat_id", "type": "str", "required": true, "waha": {"support": "full", "name": "chatId"}, "green_api": {"support": "full", "name": "chatId"}},
+        {"name": "message_id", "type": "str", "required": true, "waha": {"support": "full", "name": "messageId"}, "green_api": {"support": "full", "name": "idMessage"}},
+        {"name": "text", "type": "str", "required": true, "waha": {"support": "full", "name": "text"}, "green_api": {"support": "full", "name": "message"}}
+      ]
+    },
+    "delete_message": {
+      "category": "message_management",
+      "description": "Delete a message",
+      "status": "planned",
+      "returns": "bool",
+      "waha_endpoint": "DELETE /api/{session}/chats/{chatId}/messages/{messageId}",
+      "green_api_endpoint": "POST /deleteMessage",
+      "parameters": [
+        {"name": "chat_id", "type": "str", "required": true, "waha": {"support": "full", "name": "chatId"}, "green_api": {"support": "full", "name": "chatId"}},
+        {"name": "message_id", "type": "str", "required": true, "waha": {"support": "full", "name": "messageId"}, "green_api": {"support": "full", "name": "idMessage"}}
+      ]
+    },
+    "star_message": {
+      "category": "message_management",
+      "description": "Star or unstar a message",
+      "status": "planned",
+      "returns": "bool",
+      "waha_endpoint": "PUT /api/star",
+      "green_api_endpoint": "Not supported",
+      "parameters": [
+        {"name": "chat_id", "type": "str", "required": true, "waha": {"support": "full", "name": "chatId"}, "green_api": {"support": "none"}},
+        {"name": "message_id", "type": "str", "required": true, "waha": {"support": "full", "name": "messageId"}, "green_api": {"support": "none"}},
+        {"name": "star", "type": "bool", "required": true, "waha": {"support": "full", "name": "star"}, "green_api": {"support": "none"}}
+      ]
+    },
+    "pin_message": {
+      "category": "message_management",
+      "description": "Pin a message in a chat",
+      "status": "planned",
+      "returns": "bool",
+      "waha_endpoint": "POST /api/{session}/chats/{chatId}/messages/{messageId}/pin",
+      "green_api_endpoint": "Not supported",
+      "parameters": [
+        {"name": "chat_id", "type": "str", "required": true, "waha": {"support": "full", "name": "chatId"}, "green_api": {"support": "none"}},
+        {"name": "message_id", "type": "str", "required": true, "waha": {"support": "full", "name": "messageId"}, "green_api": {"support": "none"}}
+      ]
+    },
+    "unpin_message": {
+      "category": "message_management",
+      "description": "Unpin a message in a chat",
+      "status": "planned",
+      "returns": "bool",
+      "waha_endpoint": "POST /api/{session}/chats/{chatId}/messages/{messageId}/unpin",
+      "green_api_endpoint": "Not supported",
+      "parameters": [
+        {"name": "chat_id", "type": "str", "required": true, "waha": {"support": "full", "name": "chatId"}, "green_api": {"support": "none"}},
+        {"name": "message_id", "type": "str", "required": true, "waha": {"support": "full", "name": "messageId"}, "green_api": {"support": "none"}}
+      ]
+    },
+    "get_messages": {
+      "category": "retrieval",
+      "description": "Get messages from a chat",
+      "status": "planned",
+      "returns": "list[Message]",
+      "waha_endpoint": "GET /api/{session}/chats/{chatId}/messages",
+      "green_api_endpoint": "POST /getChatHistory",
+      "parameters": [
+        {"name": "chat_id", "type": "str", "required": true, "waha": {"support": "full", "name": "chatId"}, "green_api": {"support": "full", "name": "chatId"}},
+        {"name": "limit", "type": "Optional[int]", "required": false, "default": null, "waha": {"support": "partial"}, "green_api": {"support": "full", "name": "count"}}
+      ]
+    },
+    "get_message": {
+      "category": "retrieval",
+      "description": "Get a specific message by ID",
+      "status": "planned",
+      "returns": "Message",
+      "waha_endpoint": "GET /api/{session}/chats/{chatId}/messages/{messageId}",
+      "green_api_endpoint": "POST /getMessage",
+      "parameters": [
+        {"name": "chat_id", "type": "str", "required": true, "waha": {"support": "full", "name": "chatId"}, "green_api": {"support": "full", "name": "chatId"}},
+        {"name": "message_id", "type": "str", "required": true, "waha": {"support": "full", "name": "messageId"}, "green_api": {"support": "full", "name": "idMessage"}}
+      ]
+    },
+    "mark_chat_read": {
+      "category": "chat_management",
+      "description": "Mark all messages in a chat as read",
+      "status": "planned",
+      "returns": "bool",
+      "waha_endpoint": "POST /api/{session}/chats/{chatId}/messages/read",
+      "green_api_endpoint": "POST /readChat",
+      "parameters": [
+        {"name": "chat_id", "type": "str", "required": true, "waha": {"support": "full", "name": "chatId"}, "green_api": {"support": "full", "name": "chatId"}}
+      ]
+    },
+    "archive_chat": {
+      "category": "chat_management",
+      "description": "Archive a chat",
+      "status": "planned",
+      "returns": "bool",
+      "waha_endpoint": "Not supported",
+      "green_api_endpoint": "POST /archiveChat",
+      "parameters": [
+        {"name": "chat_id", "type": "str", "required": true, "waha": {"support": "none"}, "green_api": {"support": "full", "name": "chatId"}}
+      ]
+    },
+    "unarchive_chat": {
+      "category": "chat_management",
+      "description": "Unarchive a chat",
+      "status": "planned",
+      "returns": "bool",
+      "waha_endpoint": "Not supported",
+      "green_api_endpoint": "POST /unarchiveChat",
+      "parameters": [
+        {"name": "chat_id", "type": "str", "required": true, "waha": {"support": "none"}, "green_api": {"support": "full", "name": "chatId"}}
+      ]
+    },
+    "set_disappearing_chat": {
+      "category": "chat_management",
+      "description": "Set disappearing messages timer for a chat",
+      "status": "planned",
+      "returns": "bool",
+      "waha_endpoint": "Not supported",
+      "green_api_endpoint": "POST /setDisappearingChat",
+      "parameters": [
+        {"name": "chat_id", "type": "str", "required": true, "waha": {"support": "none"}, "green_api": {"support": "full", "name": "chatId"}},
+        {"name": "ephemeral_expiration", "type": "int", "required": true, "description": "Expiration in seconds", "waha": {"support": "none"}, "green_api": {"support": "full", "name": "ephemeralExpiration"}}
+      ]
+    },
+    "download_file": {
+      "category": "files",
+      "description": "Download a file from a message",
+      "status": "planned",
+      "returns": "FileData",
+      "waha_endpoint": "Varies by engine",
+      "green_api_endpoint": "POST /downloadFile",
+      "parameters": [
+        {"name": "message_id", "type": "str", "required": true, "waha": {"support": "partial"}, "green_api": {"support": "full", "name": "idMessage"}}
+      ]
+    },
+    "upload_file": {
+      "category": "files",
+      "description": "Upload a file to send later",
+      "status": "planned",
+      "returns": "str",
+      "waha_endpoint": "Not supported",
+      "green_api_endpoint": "POST /uploadFile",
+      "parameters": [
+        {"name": "file", "type": "bytes", "required": true, "waha": {"support": "none"}, "green_api": {"support": "full", "name": "file"}}
+      ]
+    },
+    "get_last_incoming_messages": {
+      "category": "retrieval",
+      "description": "Get last incoming messages",
+      "status": "planned",
+      "returns": "list[Message]",
+      "waha_endpoint": "Not supported",
+      "green_api_endpoint": "GET /lastIncomingMessages",
+      "parameters": [
+        {"name": "minutes", "type": "Optional[int]", "required": false, "default": 1440, "waha": {"support": "none"}, "green_api": {"support": "full", "name": "minutes"}}
+      ]
+    },
+    "get_last_outgoing_messages": {
+      "category": "retrieval",
+      "description": "Get last outgoing messages",
+      "status": "planned",
+      "returns": "list[Message]",
+      "waha_endpoint": "Not supported",
+      "green_api_endpoint": "GET /lastOutgoingMessages",
+      "parameters": [
+        {"name": "minutes", "type": "Optional[int]", "required": false, "default": 1440, "waha": {"support": "none"}, "green_api": {"support": "full", "name": "minutes"}}
+      ]
+    },
+    "show_messages_queue": {
+      "category": "queue",
+      "description": "Show messages waiting to be sent",
+      "status": "planned",
+      "returns": "list[QueuedMessage]",
+      "waha_endpoint": "Not supported",
+      "green_api_endpoint": "GET /showMessagesQueue",
+      "parameters": []
+    },
+    "clear_messages_queue": {
+      "category": "queue",
+      "description": "Clear all messages from the outgoing queue",
+      "status": "planned",
+      "returns": "bool",
+      "waha_endpoint": "Not supported",
+      "green_api_endpoint": "GET /clearMessagesQueue",
+      "parameters": []
+    },
+    "get_messages_count": {
+      "category": "queue",
+      "description": "Get count of messages in outgoing queue",
+      "status": "planned",
+      "returns": "int",
+      "waha_endpoint": "Not supported",
+      "green_api_endpoint": "GET /getMessagesCount",
+      "parameters": []
+    },
+    "send_text_status": {
+      "category": "status",
+      "description": "Send a text status update",
+      "status": "planned",
+      "returns": "Status",
+      "waha_endpoint": "Not supported",
+      "green_api_endpoint": "POST /sendTextStatus",
+      "parameters": [
+        {"name": "text", "type": "str", "required": true, "waha": {"support": "none"}, "green_api": {"support": "full", "name": "message"}}
+      ]
+    },
+    "send_media_status": {
+      "category": "status",
+      "description": "Send a media status update",
+      "status": "planned",
+      "returns": "Status",
+      "waha_endpoint": "Not supported",
+      "green_api_endpoint": "POST /sendMediaStatus",
+      "parameters": [
+        {"name": "file", "type": "FileData", "required": true, "waha": {"support": "none"}, "green_api": {"support": "full", "name": "urlFile"}},
+        {"name": "caption", "type": "Optional[str]", "required": false, "default": null, "waha": {"support": "none"}, "green_api": {"support": "full", "name": "caption"}}
+      ]
+    },
+    "update_group_settings": {
+      "category": "groups",
+      "description": "Update group settings",
+      "status": "planned",
+      "returns": "bool",
+      "waha_endpoint": "Partial support",
+      "green_api_endpoint": "POST /updateGroupSettings",
+      "parameters": [
+        {"name": "group_id", "type": "str", "required": true, "waha": {"support": "partial"}, "green_api": {"support": "full", "name": "groupId"}},
+        {"name": "settings", "type": "GroupSettings", "required": true, "waha": {"support": "partial"}, "green_api": {"support": "full"}}
       ]
     }
+  },
+  "categories": {
+    "messaging": {
+      "description": "Methods for sending various types of messages",
+      "methods": ["send_text_message", "send_image", "send_video", "send_file", "send_voice", "send_location", "send_contact", "send_poll", "send_buttons", "send_list_message", "send_event", "forward_message"]
+    },
+    "message_management": {
+      "description": "Methods for managing existing messages",
+      "methods": ["edit_message", "delete_message", "star_message", "pin_message", "unpin_message"]
+    },
+    "chat_management": {
+      "description": "Methods for managing chats",
+      "methods": ["mark_chat_read", "archive_chat", "unarchive_chat", "set_disappearing_chat"]
+    },
+    "retrieval": {
+      "description": "Methods for retrieving messages and chat history",
+      "methods": ["get_messages", "get_message", "get_last_incoming_messages", "get_last_outgoing_messages"]
+    },
+    "files": {
+      "description": "Methods for file handling",
+      "methods": ["download_file", "upload_file"]
+    },
+    "queue": {
+      "description": "Methods for managing outgoing message queue",
+      "methods": ["show_messages_queue", "clear_messages_queue", "get_messages_count"]
+    },
+    "status": {
+      "description": "Methods for WhatsApp status/stories",
+      "methods": ["send_text_status", "send_media_status"]
+    },
+    "groups": {
+      "description": "Methods for group management",
+      "methods": ["update_group_settings"]
+    }
+  },
+  "notes": {
+    "waha_engines": "WAHA supports multiple engines: WEBJS, NOWEB, GOWS. Feature availability varies by engine.",
+    "green_api_format": "Green API uses {{apiUrl}}/waInstance{{idInstance}}/METHOD/{{apiTokenInstance}} format",
+    "waha_format": "WAHA uses /api/{session}/... format with session parameter",
+    "implementation_priority": "Methods marked as 'implemented' are currently available in WhatsFuse. 'planned' methods are documented for future implementation."
   }
 }
+

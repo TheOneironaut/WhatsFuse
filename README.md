@@ -1,163 +1,284 @@
-# WhatsFuse Automation Scripts
+# WhatsFuse 🚀
 
-This directory contains automation tools for maintaining WhatsFuse's unified API.
+> **A unified Python SDK for multiple WhatsApp API providers**
 
-## Scripts
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-### 1. generate_docs.py
-**Purpose**: Automatically generate documentation from API specification
+WhatsFuse provides a single, consistent interface for multiple WhatsApp API providers. Write your code once, switch providers with one line. Inspired by [LiteLLM](https://github.com/BerriAI/litellm).
 
-**Usage**:
+## ✨ Features
+
+- 🎯 **Unified Interface** - Same code works with all providers
+- 🔄 **Easy Switching** - Change providers with one parameter
+- 🛡️ **Type Safe** - Full Python type hints
+- 📚 **Well Documented** - Comprehensive guides and examples
+- 🧩 **Provider Agnostic** - Focus on your app, not provider APIs
+- ⚡ **Modern Python** - Built with Python 3.10+ features
+
+## 🎬 Quick Start
+
+### Installation
+
 ```bash
+pip install whatsfuse
+```
+
+### Basic Usage
+
+```python
+from whatsfuse import WhatsFuse
+
+# Initialize with any provider
+client = WhatsFuse(
+    provider="waha",  # or "green_api"
+    api_url="http://localhost:3000",
+    api_key="your-api-key"
+)
+
+# Send a message
+message = client.send_text_message(
+    chat_id="1234567890@c.us",
+    text="Hello from WhatsFuse! 👋"
+)
+
+print(f"Message sent: {message.id}")
+```
+
+### Switch Providers Instantly
+
+```python
+# Start with WAHA
+client_waha = WhatsFuse(provider="waha", api_url="...", api_key="...")
+
+# Switch to Green API - SAME CODE!
+client_green = WhatsFuse(provider="green_api", instance_id="...", api_token="...")
+
+# Both work identically! 🎯
+message1 = client_waha.send_text_message("123@c.us", "Hello")
+message2 = client_green.send_text_message("123@c.us", "Hello")
+```
+
+## 📋 Supported Providers
+
+| Provider | Status | Type | Authentication |
+|----------|--------|------|----------------|
+| [WAHA](https://waha.devlike.pro) | ✅ Ready | Self-hosted | API Key |
+| [Green API](https://green-api.com) | ✅ Ready | Cloud | Instance ID + Token |
+| More providers | 🚧 Coming | - | - |
+
+## 📖 Documentation
+
+### Getting Started
+- **[Installation Guide](docs/getting-started/installation.md)** - Setup and first steps
+- **[Quick Start Tutorial](docs/getting-started/quickstart.md)** - Send your first message in 5 minutes
+
+### Provider Guides
+- **[WAHA Provider](docs/providers/waha.md)** - Complete WAHA setup and usage
+- **[Green API Provider](docs/providers/green_api.md)** - Complete Green API setup and usage
+
+### Development
+- **[Project Overview](docs/development/project-overview.md)** - Architecture and design
+- **[Contributing Guide](docs/CONTRIBUTING.md)** - How to contribute
+- **[Start Here](docs/development/start-here.md)** - Development setup
+- **[Automation System](docs/development/automation-system.md)** - How we manage the API
+
+### API Reference
+- **[Feature Matrix](docs/FEATURE_MATRIX.md)** - Complete method and parameter reference
+- **[Parameter Mapping](docs/PARAMETER_MAPPING.md)** - How unified parameters map to providers
+- **[Architecture](docs/architecture.md)** - Visual architecture overview
+- **[Design Document](docs/DESIGN.md)** - Detailed design decisions
+
+## 🎯 Core Concepts
+
+### Unified Interface
+
+All providers implement the **same interface** with the **same parameters**:
+
+```python
+# Unified parameters work across ALL providers
+client.send_text_message(
+    chat_id="123",
+    text="Hello",
+    reply_to="msg_456",      # Unified parameter
+    mentions=["972501234567"], # Unified parameter
+    link_preview=False        # Unified parameter
+)
+```
+
+Each provider translates these unified parameters to its specific API format internally.
+
+### Provider Abstraction
+
+```
+Your Code (Unified)
+       ↓
+WhatsFuse Interface
+       ↓
+Provider Translation
+       ↓
+Provider API (WAHA/Green API/etc)
+```
+
+## 💡 Examples
+
+### Send Different Message Types
+
+```python
+# Text message
+client.send_text_message(chat_id="123@c.us", text="Hello!")
+
+# Image with caption
+client.send_image(
+    chat_id="123@c.us",
+    image="https://example.com/image.jpg",
+    caption="Check this out!"
+)
+
+# Document
+client.send_file(
+    chat_id="123@c.us",
+    file="/path/to/document.pdf",
+    filename="report.pdf"
+)
+
+# Location
+client.send_location(
+    chat_id="123@c.us",
+    latitude=37.7749,
+    longitude=-122.4194,
+    name="San Francisco"
+)
+```
+
+### Receive Messages
+
+```python
+# Get chat history
+messages = client.get_chat_history(
+    chat_id="123@c.us",
+    limit=50
+)
+
+for msg in messages:
+    print(f"{msg.sender}: {msg.text}")
+```
+
+### Error Handling
+
+```python
+from whatsfuse import WhatsFuseError, AuthenticationError
+
+try:
+    message = client.send_text_message("123@c.us", "Hello")
+except AuthenticationError:
+    print("Invalid credentials")
+except WhatsFuseError as e:
+    print(f"Error: {e}")
+```
+
+## 🤝 Contributing
+
+We welcome contributions! See our [Contributing Guide](docs/CONTRIBUTING.md) for:
+- Adding new providers
+- Reporting bugs
+- Suggesting features
+- Submitting pull requests
+
+### Quick Dev Setup
+
+```bash
+# Clone the repo
+git clone https://github.com/yourusername/whatsfuse.git
+cd whatsfuse
+
+# Install in dev mode
+pip install -e ".[dev]"
+
+# Run tests
+pytest
+```
+
+## 🔧 Development Tools
+
+WhatsFuse uses a hybrid automation system for maintaining consistency:
+
+```bash
+# Validate API consistency
+python scripts/validate_api.py
+
+# Generate documentation
 python scripts/generate_docs.py
 ```
 
-**Output**: `docs/FEATURE_MATRIX.md`
+See [Automation System](docs/development/automation-system.md) for details.
 
-**When to use**:
-- After updating `api_spec.json`
-- Before committing changes
-- To ensure docs are up-to-date
+## 📊 Project Status
 
----
+- ✅ **Core Architecture** - Complete
+- ✅ **WAHA Provider** - Ready (placeholder implementation)
+- ✅ **Green API Provider** - Ready (placeholder implementation)
+- ✅ **Documentation** - Comprehensive
+- 🚧 **Full Implementation** - In Progress
+- 📋 **Additional Providers** - Planned
 
-### 2. validate_api.py
-**Purpose**: Validate that code matches the API specification
+## 🎓 Architecture
 
-**Usage**:
-```bash
-python scripts/validate_api.py
+WhatsFuse follows a clean, modular architecture:
+
+```
+┌─────────────────────────┐
+│   Your Application      │
+└───────────┬─────────────┘
+            │
+┌───────────▼─────────────┐
+│  WhatsFuse Interface    │  ← Unified API
+└───────────┬─────────────┘
+            │
+    ┌───────┴───────┐
+    ▼               ▼
+┌────────┐      ┌─────────┐
+│  WAHA  │      │ Green   │  ← Provider Translation
+│ Client │      │  API    │
+└───┬────┘      └────┬────┘
+    │                │
+    ▼                ▼
+  WAHA API      Green API
 ```
 
-**What it checks**:
-- BaseClient has all methods from spec
-- WhatsFuse has all methods from spec
-- All providers have all methods from spec
-- All parameters match exactly
+See [Architecture Docs](docs/architecture.md) for visual diagrams and detailed explanations.
 
-**When to use**:
-- Before committing code
-- In CI/CD pipeline
-- After adding new parameters
-- After modifying method signatures
+## 📝 Philosophy
 
----
+**Write Once, Run Anywhere**
 
-## Workflow
+```python
+# Your code
+def send_notification(client, phone, message):
+    return client.send_text_message(phone, message)
 
-### Adding a New Parameter
-
-1. **Edit api_spec.json**
-   ```json
-   {
-     "name": "new_param",
-     "type": "Optional[str]",
-     "required": false,
-     "default": null,
-     "description": "Description of parameter",
-     "waha": {"support": "full", "name": "wahaParamName"},
-     "green_api": {"support": "full", "name": "greenApiParamName"}
-   }
-   ```
-
-2. **Update code** (BaseClient, WhatsFuse, Providers)
-
-3. **Validate**
-   ```bash
-   python scripts/validate_api.py
-   ```
-
-4. **Generate docs**
-   ```bash
-   python scripts/generate_docs.py
-   ```
-
-5. **Commit**
-   ```bash
-   git add api_spec.json docs/FEATURE_MATRIX.md whatsfuse/
-   git commit -m "feat: add new_param parameter"
-   ```
-
----
-
-### Adding a New Method
-
-1. **Add to api_spec.json**
-   ```json
-   "new_method": {
-     "category": "messaging",
-     "description": "Method description",
-     "status": "in_progress",
-     "returns": "ReturnType",
-     "parameters": [...]
-   }
-   ```
-
-2. **Implement in BaseClient**
-
-3. **Implement in WhatsFuse**
-
-4. **Implement in all providers**
-
-5. **Validate & generate docs**
-   ```bash
-   python scripts/validate_api.py
-   python scripts/generate_docs.py
-   ```
-
----
-
-## CI/CD Integration
-
-Add to your CI pipeline (`.github/workflows/test.yml`):
-
-```yaml
-name: Test
-
-on: [push, pull_request]
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: '3.10'
-      
-      - name: Install dependencies
-        run: pip install -e .
-      
-      - name: Validate API
-        run: python scripts/validate_api.py
-      
-      - name: Check docs are up to date
-        run: |
-          python scripts/generate_docs.py
-          git diff --exit-code docs/FEATURE_MATRIX.md
+# Works with ANY provider!
+send_notification(waha_client, "123", "Hi")
+send_notification(green_client, "123", "Hi")
 ```
 
----
+## 🔗 Resources
 
-## Files
+- 📖 [Full Documentation](docs/index.md)
+- 🐛 [Issue Tracker](https://github.com/yourusername/whatsfuse/issues)
+- 💬 [Discussions](https://github.com/yourusername/whatsfuse/discussions)
+- 📧 Email: support@whatsfuse.dev
 
-- `api_spec.json` - Single source of truth for API
-- `generate_docs.py` - Documentation generator
-- `validate_api.py` - API validator
-- `README.md` - This file
+## 📜 License
 
----
+MIT License - see [LICENSE](LICENSE) for details.
 
-## Benefits
+## 🙏 Acknowledgments
 
-ג… **Single source of truth** - api_spec.json  
-ג… **Always up-to-date docs** - Generated automatically  
-ג… **Consistency guaranteed** - Validation catches errors  
-ג… **Easy to maintain** - One place to update  
-ג… **Version controlled** - Track changes in git
+- Inspired by [LiteLLM](https://github.com/BerriAI/litellm)
+- Built with ❤️ for the WhatsApp automation community
+- Thanks to all WhatsApp API providers
 
 ---
 
-For more information, see:
-- [PARAMETER_MAPPING.md](../docs/PARAMETER_MAPPING.md)
-- [UNIFIED_INTERFACE_UPDATE.md](../UNIFIED_INTERFACE_UPDATE.md)
+**Ready to start?** Check out our [Quick Start Guide](docs/getting-started/quickstart.md)!
