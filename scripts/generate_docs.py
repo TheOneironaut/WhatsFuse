@@ -16,21 +16,22 @@ def load_spec():
 def status_emoji(status):
     """Get emoji for status."""
     return {
-        'complete': 'ג…',
-        'in_progress': 'נ§',
-        'planned': 'נ“‹',
-        'deprecated': 'ג ן¸'
-    }.get(status, 'ג“')
+        'complete': '✅',
+        'implemented': '✅',
+        'in_progress': '🔧',
+        'planned': '📋',
+        'deprecated': '⚠️'
+    }.get(status, '❓')
 
 
 def support_emoji(support):
     """Get emoji for support level."""
     return {
-        'full': 'ג…',
-        'partial': 'ג ן¸',
-        'none': 'ג',
-        'planned': 'נ“‹'
-    }.get(support, 'ג“')
+        'full': '✅',
+        'partial': '⚠️',
+        'none': '❌',
+        'planned': '📋'
+    }.get(support, '❓')
 
 
 def generate_method_table(method_name, method_spec):
@@ -46,13 +47,13 @@ def generate_method_table(method_name, method_spec):
     md += "|-----------|------|----------|---------|------|-----------|-------------|\n"
     
     for param in method_spec['parameters']:
-        required = "ג… Yes" if param['required'] else "ג No"
+        required = "✅ Yes" if param['required'] else "❌ No"
         default = f"`{param.get('default', '-')}`" if not param['required'] else "-"
         waha_support = support_emoji(param['waha']['support'])
         green_support = support_emoji(param['green_api']['support'])
         
         md += f"| `{param['name']}` | `{param['type']}` | {required} | {default} | "
-        md += f"{waha_support} | {green_support} | {param['description']} |\n"
+        md += f"{waha_support} | {green_support} | {param.get('description', '-')} |\n"
     
     md += "\n"
     
@@ -62,7 +63,7 @@ def generate_method_table(method_name, method_spec):
     # WAHA
     md += "**WAHA Provider:**\n```python\n{\n"
     for param in method_spec['parameters']:
-        if param['required'] or param.get('default') is not None:
+        if (param['required'] or param.get('default') is not None) and 'name' in param['waha']:
             waha_name = param['waha']['name']
             md += f'    "{waha_name}": {param["name"]}'
             if 'notes' in param['waha']:
@@ -72,14 +73,14 @@ def generate_method_table(method_name, method_spec):
     md += f"**Support**: {support_emoji('full')} "
     partial_params = [p for p in method_spec['parameters'] if p['waha']['support'] == 'partial']
     if partial_params:
-        md += f"Most features, ג ן¸ {', '.join(p['name'] for p in partial_params)} partial\n\n"
+        md += f"Most features, ⚠️ {', '.join(p['name'] for p in partial_params)} partial\n\n"
     else:
         md += "All features fully supported\n\n"
     
     # Green API
     md += "**Green API Provider:**\n```python\n{\n"
     for param in method_spec['parameters']:
-        if param['required'] or param.get('default') is not None:
+        if (param['required'] or param.get('default') is not None) and 'name' in param['green_api']:
             green_name = param['green_api']['name']
             md += f'    "{green_name}": {param["name"]}'
             if 'notes' in param['green_api']:
@@ -89,7 +90,7 @@ def generate_method_table(method_name, method_spec):
     md += f"**Support**: {support_emoji('full')} "
     partial_params = [p for p in method_spec['parameters'] if p['green_api']['support'] == 'partial']
     if partial_params:
-        md += f"Most features, ג ן¸ {', '.join(p['name'] for p in partial_params)} partial\n\n"
+        md += f"Most features, ⚠️ {', '.join(p['name'] for p in partial_params)} partial\n\n"
     else:
         md += "All features fully supported\n\n"
     
@@ -108,19 +109,19 @@ def generate_feature_matrix(spec):
     md += "---\n\n"
     
     # Table of contents
-    md += "## נ“‹ Table of Contents\n\n"
+    md += "## 📋 Table of Contents\n\n"
     for method_name in spec['methods'].keys():
         md += f"- [{method_name}()](#user-content-{method_name.replace('_', '')})\n"
     md += "\n---\n\n"
     
     # Legend
-    md += "## נ“ Legend\n\n"
+    md += "## 📖 Legend\n\n"
     md += "### Support Status\n"
-    md += "- ג… **Fully Supported** - Works as documented\n"
-    md += "- ג ן¸ **Partial Support** - Works with limitations\n"
-    md += "- נ§ **In Progress** - Currently being implemented\n"
-    md += "- ג **Not Supported** - Feature unavailable\n"
-    md += "- נ“‹ **Planned** - Scheduled for future\n\n"
+    md += "- ✅ **Fully Supported** - Works as documented\n"
+    md += "- ⚠️ **Partial Support** - Works with limitations\n"
+    md += "- 🔧 **In Progress** - Currently being implemented\n"
+    md += "- ❌ **Not Supported** - Feature unavailable\n"
+    md += "- 📋 **Planned** - Scheduled for future\n\n"
     
     md += "---\n\n"
     
@@ -134,10 +135,14 @@ def generate_feature_matrix(spec):
     
     # Generate sections by category
     category_names = {
-        'messaging': 'נ“¬ Message Sending',
-        'chat': 'נ’¬ Chat Management',
-        'contact': 'נ‘¥ Contact Management',
-        'session': 'נ” Session Management'
+        'messaging': '💬 Message Sending',
+        'message_management': '✏️ Message Management',
+        'chat_management': '💭 Chat Management',
+        'retrieval': '📥 Message Retrieval',
+        'files': '📁 File Operations',
+        'queue': '📊 Queue Management',
+        'status': '📢 Status Updates',
+        'groups': '👥 Group Management'
     }
     
     for category, methods in categories.items():
@@ -146,7 +151,7 @@ def generate_feature_matrix(spec):
             md += generate_method_table(method_name, method_spec)
     
     # Summary table
-    md += "## נ“ˆ Summary\n\n"
+    md += "## 📊 Summary\n\n"
     md += "### Methods Overview\n\n"
     md += "| Method | Category | Status | WAHA | Green API |\n"
     md += "|--------|----------|--------|------|-----------|\n"
@@ -166,7 +171,7 @@ def generate_feature_matrix(spec):
     md += "\n---\n\n"
     
     # Footer
-    md += "## נ”„ Maintenance\n\n"
+    md += "## 📝 Maintenance\n\n"
     md += "This document is **automatically generated** from `api_spec.json`.\n\n"
     md += "**To update this documentation:**\n"
     md += "1. Edit `api_spec.json`\n"
@@ -182,21 +187,21 @@ def generate_feature_matrix(spec):
 
 def main():
     """Main function."""
-    print("נ”„ Loading API specification...")
+    print("📂 Loading API specification...")
     spec = load_spec()
     
-    print("נ“ Generating feature matrix...")
+    print("📝 Generating feature matrix...")
     docs = generate_feature_matrix(spec)
     
     output_path = Path(__file__).parent.parent / 'docs' / 'FEATURE_MATRIX.md'
     output_path.parent.mkdir(exist_ok=True)
     
-    print(f"נ’¾ Writing to {output_path}...")
+    print(f"💾 Writing to {output_path}...")
     with open(output_path, 'w', encoding='utf-8') as f:
         f.write(docs)
     
-    print("ג… Documentation generated successfully!")
-    print(f"נ“„ Output: {output_path}")
+    print("✅ Documentation generated successfully!")
+    print(f"📄 Output: {output_path}")
 
 
 if __name__ == "__main__":
