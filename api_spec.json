@@ -1,0 +1,58 @@
+{
+  "version": "0.1.0",
+  "updated": "2025-09-30",
+  "description": "WhatsFuse Unified API Specification - Single source of truth",
+  "methods": {
+    "send_text_message": {
+      "category": "messaging",
+      "description": "Send a text message to a chat",
+      "status": "in_progress",
+      "returns": "Message",
+      "parameters": [
+        {
+          "name": "chat_id",
+          "type": "str",
+          "required": true,
+          "description": "The unique identifier for the chat",
+          "waha": {"support": "full", "name": "chatId", "notes": "Direct mapping"},
+          "green_api": {"support": "full", "name": "chatId", "notes": "Adds @c.us suffix"}
+        },
+        {
+          "name": "text",
+          "type": "str",
+          "required": true,
+          "description": "The message text to send",
+          "waha": {"support": "full", "name": "text"},
+          "green_api": {"support": "full", "name": "message", "notes": "Different name"}
+        },
+        {
+          "name": "reply_to",
+          "type": "Optional[str]",
+          "required": false,
+          "default": null,
+          "description": "Optional message ID to reply to",
+          "waha": {"support": "full", "name": "reply_to"},
+          "green_api": {"support": "full", "name": "quotedMessageId"}
+        },
+        {
+          "name": "mentions",
+          "type": "Optional[list[str]]",
+          "required": false,
+          "default": null,
+          "description": "Optional list of phone numbers to mention",
+          "waha": {"support": "full", "name": "mentions"},
+          "green_api": {"support": "partial", "name": "mentions", "notes": "Format limitations"}
+        },
+        {
+          "name": "link_preview",
+          "type": "bool",
+          "required": false,
+          "default": true,
+          "description": "Whether to show link preview",
+          "waha": {"support": "full", "name": "linkPreview"},
+          "green_api": {"support": "full", "name": "linkPreview"}
+        }
+      ]
+    }
+  }
+}

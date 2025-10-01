@@ -5,7 +5,7 @@ from pathlib import Path
 
 from whatsfuse.core.base_client import BaseClient
 from whatsfuse.core.types import Message, Chat, Contact, Group, Session
-from whatsfuse.core.exceptions import NotImplementedError
+
 
 
 class GreenAPIClient(BaseClient):
